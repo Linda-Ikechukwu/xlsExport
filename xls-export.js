@@ -85,7 +85,7 @@ class XlsExport {
 
   objectToTable() {
     // extract keys from the first object, will be the title for each column
-    const colsHead = `<tr>${Object.keys(this._data[0]).map(key => `<td>${key}</td>`).join('')}</tr>`;
+    const colsHead = `<tr>${Object.keys(this._data[0]).map(key => `<td><b>${this.splitWords(key)}</b></td>`).join('')}</tr>`;
 
     const colsData = this._data.map(obj => [`<tr>
                 ${Object.keys(obj).map(col => `<td>${obj[col] ? obj[col] : ''}</td>`).join('')}
@@ -105,6 +105,30 @@ class XlsExport {
 
     return `${colsHead}\n${colsData}`;
   }
+
+  splitWords(s) {
+    var re, match, output = [];
+    // re = /[A-Z]?[a-z]+/g
+    re = /([A-Za-z]?)([a-z]+)/g;
+
+    /*
+    matches example: "oneTwoThree"
+    ["one", "o", "ne"]
+    ["Two", "T", "wo"]
+    ["Three", "T", "hree"]
+    */
+
+    match = re.exec(s);
+    while (match) {
+      // output.push(match.join(""));
+      output.push([match[1].toUpperCase(), match[2]].join(""));
+      match = re.exec(s);
+    }
+
+    return output.join(" ");
+
+  }
 }
 
 export default XlsExport; // comment this line to babelize
+
